@@ -1,72 +1,60 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
-{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red0\green0\blue0;\red174\green176\blue183;
-\red103\green107\blue114;\red71\green149\blue242;\red117\green114\blue185;\red89\green158\blue96;\red38\green157\blue169;
-\red152\green54\blue29;}
-{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgray\c0\c0;\csgenericrgb\c68235\c69020\c71765;
-\csgenericrgb\c40392\c41961\c44706;\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c45882\c44706\c72549;\csgenericrgb\c34902\c61961\c37647;\csgenericrgb\c14902\c61569\c66275;
-\csgenericrgb\c59608\c21176\c11373;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
 
-\f0\fs26 \cf2 \cb3 import \cf4 numpy \cf2 as \cf4 np\
-\cf2 import \cf4 matplotlib.pyplot \cf2 as \cf4 plt\
-\cf2 from \cf4 scipy \cf2 import \cf4 stats\
-\
-\cf5 #.xvg libraries\
-\cf2 def \cf6 read_xvg\cf4 (filename):\
-    data = []\
-    \cf2 with \cf7 open\cf4 (filename) \cf2 as \cf4 f:\
-        \cf2 for \cf4 line \cf2 in \cf4 f:\
-            \cf2 if \cf4 line.startswith((\cf8 "@"\cf4 , \cf8 "#"\cf4 )):\
-                \cf2 continue\
-            \cf4 cols = line.split()\
-            data.append([\cf7 float\cf4 (x) \cf2 for \cf4 x \cf2 in \cf4 cols])\
-    \cf2 return \cf4 np.array(data)\
-\
-\cf5 #data analysis\
-\cf4 angI = read_xvg(\cf8 "contact_AngI.xvg"\cf4 )\
-angII = read_xvg(\cf8 "contact_AngII.xvg"\cf4 )\
-\
-t_I = angI[:, \cf9 0\cf4 ]\
-c_I = angI[:, \cf9 1\cf4 ]\
-\
-t_II = angII[:, \cf9 0\cf4 ]\
-c_II = angII[:, \cf9 1\cf4 ]\
-\
-\cf5 #Average\
-\cf7 print\cf4 (\cf8 "AngI mean contact:"\cf4 , np.mean(c_I))\
-\cf7 print\cf4 (\cf8 "AngII mean contact:"\cf4 , np.mean(c_II))\
-\
-\cf7 print\cf4 (\cf8 "AngI occupancy (%):"\cf4 , np.mean(c_I > \cf9 0\cf4 ) * \cf9 100\cf4 )\
-\cf7 print\cf4 (\cf8 "AngII occupancy (%):"\cf4 , np.mean(c_II > \cf9 0\cf4 ) * \cf9 100\cf4 )\
-\
-\cf5 #t-test\
-\cf4 tstat, pval = stats.ttest_ind(c_I, c_II, \cf10 equal_var\cf4 =\cf2 False\cf4 )\
-\
-\cf7 print\cf4 (\cf8 "t-stat:"\cf4 , tstat)\
-\cf7 print\cf4 (\cf8 "p-value:"\cf4 , pval)\
-\
-\cf5 #plott, graph\
-\cf4 plt.figure()\
-\
-plt.plot(t_I, c_I, \cf10 label\cf4 =\cf8 "AngI"\cf4 )\
-plt.plot(t_II, c_II, \cf10 label\cf4 =\cf8 "AngII"\cf4 )\
-\
-plt.xlabel(\cf8 "Time (ps)"\cf4 )\
-plt.ylabel(\cf8 "Contacts"\cf4 )\
-plt.legend()\
-plt.title(\cf8 "ACE2\'96Ligand Contact"\cf4 )\
-\
-plt.show()\
-\
-\cf5 #comparision\
-\cf4 plt.figure()\
-\
-plt.hist(c_I, \cf10 bins\cf4 =\cf9 30\cf4 , \cf10 alpha\cf4 =\cf9 0.5\cf4 , \cf10 label\cf4 =\cf8 "AngI"\cf4 )\
-plt.hist(c_II, \cf10 bins\cf4 =\cf9 30\cf4 , \cf10 alpha\cf4 =\cf9 0.5\cf4 , \cf10 label\cf4 =\cf8 "AngII"\cf4 )\
-\
-plt.legend()\
-plt.title(\cf8 "Contact distribution"\cf4 )\
-plt.show()\
-}
+#.xvg libraries
+def read_xvg(filename):
+    data = []
+    with open(filename) as f:
+        for line in f:
+            if line.startswith(("@", "#")):
+                continue
+            cols = line.split()
+            data.append([float(x) for x in cols])
+    return np.array(data)
+
+#data analysis
+angI = read_xvg("contact_AngI.xvg")
+angII = read_xvg("contact_AngII.xvg")
+
+t_I = angI[:, 0]
+c_I = angI[:, 1]
+
+t_II = angII[:, 0]
+c_II = angII[:, 1]
+
+#Average
+print("AngI mean contact:", np.mean(c_I))
+print("AngII mean contact:", np.mean(c_II))
+
+print("AngI occupancy (%):", np.mean(c_I > 0) * 100)
+print("AngII occupancy (%):", np.mean(c_II > 0) * 100)
+
+#t-test
+tstat, pval = stats.ttest_ind(c_I, c_II, equal_var=False)
+
+print("t-stat:", tstat)
+print("p-value:", pval)
+
+#plott, graph
+plt.figure()
+
+plt.plot(t_I, c_I, label="AngI")
+plt.plot(t_II, c_II, label="AngII")
+
+plt.xlabel("Time (ps)")
+plt.ylabel("Contacts")
+plt.legend()
+plt.title("ACE2–Ligand Contact")
+
+plt.show()
+
+#comparision
+plt.figure()
+
+plt.hist(c_I, bins=30, alpha=0.5, label="AngI")
+plt.hist(c_II, bins=30, alpha=0.5, label="AngII")
+
+plt.legend()
+plt.title("Contact distribution")
+plt.show()
