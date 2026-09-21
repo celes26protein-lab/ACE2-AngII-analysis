@@ -1,67 +1,42 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fnil\fcharset128 HiraginoSans-W3;\f2\fnil\fcharset0 Menlo-Regular;
-}
-{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red255\green255\blue255;\red174\green176\blue183;
-\red89\green158\blue96;\red38\green157\blue169;\red117\green114\blue185;\red152\green54\blue29;\red103\green107\blue114;
-}
-{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgray\c100000;\csgenericrgb\c68235\c69020\c71765;
-\csgenericrgb\c34902\c61961\c37647;\csgenericrgb\c14902\c61569\c66275;\csgenericrgb\c45882\c44706\c72549;\csgenericrgb\c59608\c21176\c11373;\csgenericrgb\c40392\c41961\c44706;
-}
-\paperw11900\paperh16840\margl1440\margr1440\vieww15400\viewh7800\viewkind0
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+import matplotlib.pyplot as plt
+import numpy as np
 
-\f0\fs26 \cf2 \cb3 import \cf4 matplotlib.pyplot \cf2 as \cf4 plt\
-\cf2 import \cf4 numpy \cf2 as \cf4 np\
-\
-clusters = [\cf5 'Cluster 1\cf2 \\n\cf5 (Top)'\cf4 , \cf5 'Cluster 2'\cf4 , \cf5 'Cluster 3'\cf4 ]\
-subtypeA_scores = [-\cf6 127.8\cf4 , -\cf6 121.6\cf4 , -\cf6 109.8\cf4 ]\
-subtypeA_sd = [\cf6 13.1\cf4 , \cf6 20.1\cf4 , \cf6 13.9\cf4 ]\
-subtypeB_scores = [-\cf6 133.4\cf4 , -\cf6 131.9\cf4 , -\cf6 113.0\cf4 ]\
-subtypeB_sd = [\cf6 3.7\cf4 , \cf6 3.4\cf4 , \cf6 20.6\cf4 ]\
-\
-x = np.arange(\cf7 len\cf4 (clusters))\
-width = \cf6 0.35\
-\
-\cf4 fig, ax = plt.subplots(\cf8 figsize\cf4 =(\cf6 6\cf4 , \cf6 5\cf4 ))\
-\
-bars_a = ax.bar(x - width/\cf6 2\cf4 , subtypeA_scores, width, \cf8 yerr\cf4 =subtypeA_sd,\
-                 \cf8 label\cf4 =\cf5 'Subtype A'\cf4 , \cf8 color\cf4 =\cf5 'white'\cf4 , \cf8 edgecolor\cf4 =\cf5 'black'\cf4 ,\
-                 \cf8 linewidth\cf4 =\cf6 1.2\cf4 , \cf8 capsize\cf4 =\cf6 4\cf4 ,\
-                 \cf8 error_kw\cf4 =\{\cf5 'ecolor'\cf4 : \cf5 'black'\cf4 , \cf5 'elinewidth'\cf4 : \cf6 1.2\cf4 \})\
-\
-bars_b = ax.bar(x + width/\cf6 2\cf4 , subtypeB_scores, width, \cf8 yerr\cf4 =subtypeB_sd,\
-                 \cf8 label\cf4 =\cf5 'Subtype B'\cf4 , \cf8 color\cf4 =\cf5 'black'\cf4 , \cf8 edgecolor\cf4 =\cf5 'black'\cf4 ,\
-                 \cf8 linewidth\cf4 =\cf6 1.2\cf4 , \cf8 capsize\cf4 =\cf6 4\cf4 ,\
-                 \cf8 error_kw\cf4 =\{\cf5 'ecolor'\cf4 : \cf5 'black'\cf4 , \cf5 'elinewidth'\cf4 : \cf6 1.2\cf4 \})\
-\
-ax.set_ylabel(\cf5 'HADDOCK score'\cf4 , \cf8 fontsize\cf4 =\cf6 12\cf4 )\
-ax.set_xticks(x)\
-ax.set_xticklabels(clusters, \cf8 fontsize\cf4 =\cf6 11\cf4 )\
-ax.axhline(\cf6 0\cf4 , \cf8 color\cf4 =\cf5 'black'\cf4 , \cf8 linewidth\cf4 =\cf6 0.8\cf4 )\
-\
-\cf9 # 
-\f1 \'96\'7d\'97\'e1\'82\'f0\'83\'4f\'83\'89\'83\'74\'82\'cc\'8a\'4f
-\f0 (
-\f1 \'89\'ba
-\f0 )
-\f1 \'82\'c9\'94\'7a\'92\'75\'82\'b5\'81\'41\'8f\'64\'82\'c8\'82\'e8\'82\'f0\'96\'68\'82\'ae
-\f2 \
+clusters = ['Cluster 1\n(Top)', 'Cluster 2', 'Cluster 3']
+subtypeA_scores = [-127.8, -121.6, -109.8]
+subtypeA_sd = [13.1, 20.1, 13.9]
+subtypeB_scores = [-133.4, -131.9, -113.0]
+subtypeB_sd = [3.7, 3.4, 20.6]
 
-\f0 \cf4 ax.legend(\cf8 frameon\cf4 =\cf2 False\cf4 , \cf8 fontsize\cf4 =\cf6 11\cf4 , \cf8 loc\cf4 =\cf5 'upper center'\cf4 ,\
-          \cf8 bbox_to_anchor\cf4 =(\cf6 0.5\cf4 , -\cf6 0.15\cf4 ), \cf8 ncol\cf4 =\cf6 2\cf4 )\
-\
-ax.spines[\cf5 'top'\cf4 ].set_visible(\cf2 False\cf4 )\
-ax.spines[\cf5 'right'\cf4 ].set_visible(\cf2 False\cf4 )\
-\
-\cf9 # y
-\f1 \'8e\'b2\'82\'cc\'97\'5d\'94\'92\'82\'f0\'8f\'ad\'82\'b5\'8d\'4c\'82\'b0\'82\'c4\'81\'41
-\f0 error bar
-\f1 \'82\'aa\'8f\'e3\'92\'5b\'82\'c5\'90\'d8\'82\'ea\'82\'c8\'82\'a2\'82\'e6\'82\'a4\'82\'c9\'82\'b7\'82\'e9
-\f2 \
+x = np.arange(len(clusters))
+width = 0.35
 
-\f0 \cf4 ax.set_ylim(\cf8 top\cf4 =\cf6 10\cf4 )\
-\
-plt.tight_layout()\
-plt.savefig(\cf5 'haddock_score_bw.png'\cf4 , \cf8 dpi\cf4 =\cf6 300\cf4 , \cf8 bbox_inches\cf4 =\cf5 'tight'\cf4 )\
-plt.show()\
-}
+fig, ax = plt.subplots(figsize=(6, 5))
+
+bars_a = ax.bar(x - width/2, subtypeA_scores, width, yerr=subtypeA_sd,
+                 label='Subtype A', color='white', edgecolor='black',
+                 linewidth=1.2, capsize=4,
+                 error_kw={'ecolor': 'black', 'elinewidth': 1.2})
+
+bars_b = ax.bar(x + width/2, subtypeB_scores, width, yerr=subtypeB_sd,
+                 label='Subtype B', color='black', edgecolor='black',
+                 linewidth=1.2, capsize=4,
+                 error_kw={'ecolor': 'black', 'elinewidth': 1.2})
+
+ax.set_ylabel('HADDOCK score', fontsize=12)
+ax.set_xticks(x)
+ax.set_xticklabels(clusters, fontsize=11)
+ax.axhline(0, color='black', linewidth=0.8)
+
+# 凡例をグラフの外(下)に配置し、重なりを防ぐ
+ax.legend(frameon=False, fontsize=11, loc='upper center',
+          bbox_to_anchor=(0.5, -0.15), ncol=2)
+
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+# y軸の余白を少し上げて、error barが上端で切れないようにする
+ax.set_ylim(top=10)
+
+plt.tight_layout()
+plt.savefig('haddock_score_bw.png', dpi=300, bbox_inches='tight')
+plt.show()
