@@ -1,0 +1,49 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red0\green0\blue0;\red174\green176\blue183;
+\red71\green149\blue242;\red117\green114\blue185;\red89\green158\blue96;\red38\green157\blue169;\red152\green54\blue29;
+}
+{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgray\c0\c0;\csgenericrgb\c68235\c69020\c71765;
+\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c45882\c44706\c72549;\csgenericrgb\c34902\c61961\c37647;\csgenericrgb\c14902\c61569\c66275;\csgenericrgb\c59608\c21176\c11373;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 import \cf4 pandas \cf2 as \cf4 pd\
+\
+\cf2 def \cf5 read_hbond\cf4 (filename):\
+    vals = []\
+\
+    \cf2 with \cf6 open\cf4 (filename) \cf2 as \cf4 f:\
+        \cf2 for \cf4 line \cf2 in \cf4 f:\
+            \cf2 if \cf4 line.startswith(\cf7 '#'\cf4 ) \cf2 or \cf4 line.startswith(\cf7 '@'\cf4 ):\
+                \cf2 continue\
+\
+            \cf4 vals.append(\cf6 float\cf4 (line.split()[\cf8 1\cf4 ]))\
+\
+    \cf2 return \cf4 pd.Series(vals)\
+\
+angI = read_hbond(\cf7 "AngI_hbnum.xvg"\cf4 )\
+angII = read_hbond(\cf7 "AngII_hbnum.xvg"\cf4 )\
+\
+\cf6 print\cf4 (\cf7 "AngI"\cf4 )\
+\cf6 print\cf4 (\cf7 "mean ="\cf4 , angI.mean())\
+\cf6 print\cf4 (\cf7 "std  ="\cf4 , angI.std())\
+\
+\cf6 print\cf4 ()\
+\
+\cf6 print\cf4 (\cf7 "AngII"\cf4 )\
+\cf6 print\cf4 (\cf7 "mean ="\cf4 , angII.mean())\
+\cf6 print\cf4 (\cf7 "std  ="\cf4 , angII.std())\
+\
+\cf2 from \cf4 scipy.stats \cf2 import \cf4 ttest_ind\
+\
+t, p = ttest_ind(\
+    angI,\
+    angII,\
+    \cf9 equal_var\cf4 =\cf2 False\
+\cf4 )\
+\
+\cf6 print\cf4 (\cf7 "t ="\cf4 , t)\
+\cf6 print\cf4 (\cf7 "p ="\cf4 , p)\
+}

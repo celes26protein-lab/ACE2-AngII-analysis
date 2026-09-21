@@ -1,0 +1,195 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red195\green123\blue90;\red0\green0\blue0;\red174\green176\blue183;
+\red103\green107\blue114;\red71\green149\blue242;\red117\green114\blue185;\red89\green158\blue96;\red38\green157\blue169;
+\red152\green54\blue29;}
+{\*\expandedcolortbl;;\csgenericrgb\c76471\c48235\c35294;\csgray\c0\c0;\csgenericrgb\c68235\c69020\c71765;
+\csgenericrgb\c40392\c41961\c44706;\csgenericrgb\c27843\c58431\c94902;\csgenericrgb\c45882\c44706\c72549;\csgenericrgb\c34902\c61961\c37647;\csgenericrgb\c14902\c61569\c66275;
+\csgenericrgb\c59608\c21176\c11373;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 import \cf4 pandas \cf2 as \cf4 pd\
+\cf2 import \cf4 numpy \cf2 as \cf4 np\
+\cf2 import \cf4 matplotlib.pyplot \cf2 as \cf4 plt\
+\
+\cf2 from \cf4 scipy.stats \cf2 import \cf4 ttest_ind\
+\cf2 from \cf4 scipy.stats \cf2 import \cf4 f\
+\
+\cf5 # -----------------------------\
+# XVG reader\
+# -----------------------------\
+\cf2 def \cf6 read_xvg\cf4 (filename):\
+\
+    x = []\
+    y = []\
+\
+    \cf2 with \cf7 open\cf4 (filename) \cf2 as \cf4 fh:\
+        \cf2 for \cf4 line \cf2 in \cf4 fh:\
+\
+            \cf2 if \cf4 line.startswith(\cf8 "@"\cf4 ) \cf2 or \cf4 line.startswith(\cf8 "#"\cf4 ):\
+                \cf2 continue\
+\
+            \cf4 cols = line.split()\
+\
+            x.append(\cf7 float\cf4 (cols[\cf9 0\cf4 ]))\
+            y.append(\cf7 float\cf4 (cols[\cf9 1\cf4 ]))\
+\
+    \cf2 return \cf4 pd.DataFrame(\{\
+        \cf8 "time_ps"\cf4 : x,\
+        \cf8 "distance_nm"\cf4 : y\
+    \})\
+\
+\
+\cf5 # -----------------------------\
+# Load data\
+# -----------------------------\
+\cf4 angI = read_xvg(\cf8 "mindist_AngI.xvg"\cf4 )\
+angII = read_xvg(\cf8 "mindist_AngII.xvg"\cf4 )\
+\
+\cf5 # nm 
+\f1 \uc0\u8594 
+\f0  \'c5\
+\cf4 d1 = angI[\cf8 "distance_nm"\cf4 ] * \cf9 10\
+\cf4 d2 = angII[\cf8 "distance_nm"\cf4 ] * \cf9 10\
+\
+\
+\cf5 # -----------------------------\
+# Contact occupancy\
+# cutoff = 4 \'c5\
+# -----------------------------\
+\cf4 cutoff = \cf9 4.0\
+\
+\cf4 occ1 = (d1 < cutoff).mean() * \cf9 100\
+\cf4 occ2 = (d2 < cutoff).mean() * \cf9 100\
+\
+\
+\cf5 # -----------------------------\
+# Statistics\
+# -----------------------------\
+\cf4 mean1 = d1.mean()\
+std1 = d1.std()\
+\
+mean2 = d2.mean()\
+std2 = d2.std()\
+\
+\cf5 # Welch t-test\
+\cf4 t_stat, p_value = ttest_ind(\
+    d1,\
+    d2,\
+    \cf10 equal_var\cf4 =\cf2 False\
+\cf4 )\
+\
+\cf5 # F-test\
+\cf4 var1 = np.var(d1, \cf10 ddof\cf4 =\cf9 1\cf4 )\
+var2 = np.var(d2, \cf10 ddof\cf4 =\cf9 1\cf4 )\
+\
+\cf2 if \cf4 var1 > var2:\
+    F_value = var1 / var2\
+    df1 = \cf7 len\cf4 (d1) - \cf9 1\
+    \cf4 df2 = \cf7 len\cf4 (d2) - \cf9 1\
+\cf2 else\cf4 :\
+    F_value = var2 / var1\
+    df1 = \cf7 len\cf4 (d2) - \cf9 1\
+    \cf4 df2 = \cf7 len\cf4 (d1) - \cf9 1\
+\
+\cf4 p_f = \cf9 2 \cf4 * \cf7 min\cf4 (\
+    f.cdf(F_value, df1, df2),\
+    \cf9 1 \cf4 - f.cdf(F_value, df1, df2)\
+)\
+\
+\
+\cf5 # -----------------------------\
+# Print results\
+# -----------------------------\
+\cf7 print\cf4 (\cf8 "\cf2 \\n\cf8 ===== Active-site distance analysis =====\cf2 \\n\cf8 "\cf4 )\
+\
+\cf7 print\cf4 (\
+    \cf8 f"AngI mean = \cf2 \{\cf4 mean1\cf2 :\cf8 .2f\cf2 \}\cf8  \'c5"\
+\cf4 )\
+\cf7 print\cf4 (\
+    \cf8 f"AngI SD   = \cf2 \{\cf4 std1\cf2 :\cf8 .2f\cf2 \}\cf8  \'c5"\
+\cf4 )\
+\cf7 print\cf4 (\
+    \cf8 f"AngI contact occupancy (<\cf2 \{\cf4 cutoff\cf2 \}\cf8  \'c5) = \cf2 \{\cf4 occ1\cf2 :\cf8 .1f\cf2 \}\cf8 %\cf2 \\n\cf8 "\
+\cf4 )\
+\
+\cf7 print\cf4 (\
+    \cf8 f"AngII mean = \cf2 \{\cf4 mean2\cf2 :\cf8 .2f\cf2 \}\cf8  \'c5"\
+\cf4 )\
+\cf7 print\cf4 (\
+    \cf8 f"AngII SD   = \cf2 \{\cf4 std2\cf2 :\cf8 .2f\cf2 \}\cf8  \'c5"\
+\cf4 )\
+\cf7 print\cf4 (\
+    \cf8 f"AngII contact occupancy (<\cf2 \{\cf4 cutoff\cf2 \}\cf8  \'c5) = \cf2 \{\cf4 occ2\cf2 :\cf8 .1f\cf2 \}\cf8 %\cf2 \\n\cf8 "\
+\cf4 )\
+\
+\cf7 print\cf4 (\
+    \cf8 f"t-statistic = \cf2 \{\cf4 t_stat\cf2 :\cf8 .4f\cf2 \}\cf8 "\
+\cf4 )\
+\cf7 print\cf4 (\
+    \cf8 f"p-value     = \cf2 \{\cf4 p_value\cf2 :\cf8 .4e\cf2 \}\\n\cf8 "\
+\cf4 )\
+\
+\cf7 print\cf4 (\
+    \cf8 f"F-value     = \cf2 \{\cf4 F_value\cf2 :\cf8 .4f\cf2 \}\cf8 "\
+\cf4 )\
+\cf7 print\cf4 (\
+    \cf8 f"F-test p    = \cf2 \{\cf4 p_f\cf2 :\cf8 .4e\cf2 \}\cf8 "\
+\cf4 )\
+\
+\
+\cf5 # -----------------------------\
+# Histogram\
+# -----------------------------\
+\cf4 plt.figure(\cf10 figsize\cf4 =(\cf9 8\cf4 ,\cf9 6\cf4 ))\
+\
+plt.hist(\
+    d1,\
+    \cf10 bins\cf4 =\cf9 50\cf4 ,\
+    \cf10 alpha\cf4 =\cf9 0.6\cf4 ,\
+    \cf10 label\cf4 =\cf8 f"AngI (occ=\cf2 \{\cf4 occ1\cf2 :\cf8 .1f\cf2 \}\cf8 %)"\cf4 ,\
+    \cf10 density\cf4 =\cf2 True\
+\cf4 )\
+\
+plt.hist(\
+    d2,\
+    \cf10 bins\cf4 =\cf9 50\cf4 ,\
+    \cf10 alpha\cf4 =\cf9 0.6\cf4 ,\
+    \cf10 label\cf4 =\cf8 f"AngII (occ=\cf2 \{\cf4 occ2\cf2 :\cf8 .1f\cf2 \}\cf8 %)"\cf4 ,\
+    \cf10 density\cf4 =\cf2 True\
+\cf4 )\
+\
+plt.axvline(\
+    cutoff,\
+    \cf10 linestyle\cf4 =\cf8 "--"\cf4 ,\
+    \cf10 linewidth\cf4 =\cf9 2\cf4 ,\
+    \cf10 label\cf4 =\cf8 "4 \'c5 cutoff"\
+\cf4 )\
+\
+text = (\
+    \cf8 f"AngI = \cf2 \{\cf4 mean1\cf2 :\cf8 .2f\cf2 \}\cf8  \'b1 \cf2 \{\cf4 std1\cf2 :\cf8 .2f\cf2 \}\cf8  \'c5\cf2 \\n\cf8 "\
+    f"AngII = \cf2 \{\cf4 mean2\cf2 :\cf8 .2f\cf2 \}\cf8  \'b1 \cf2 \{\cf4 std2\cf2 :\cf8 .2f\cf2 \}\cf8  \'c5\cf2 \\n\cf8 "\
+    f"p = \cf2 \{\cf4 p_value\cf2 :\cf8 .3e\cf2 \}\\n\cf8 "\
+    f"F = \cf2 \{\cf4 F_value\cf2 :\cf8 .2f\cf2 \}\cf8 "\
+\cf4 )\
+\
+plt.text(\
+    \cf9 0.98\cf4 ,\
+    \cf9 0.98\cf4 ,\
+    text,\
+    \cf10 transform\cf4 =plt.gca().transAxes,\
+    \cf10 ha\cf4 =\cf8 "right"\cf4 ,\
+    \cf10 va\cf4 =\cf8 "top"\cf4 ,\
+    \cf10 bbox\cf4 =\cf7 dict\cf4 (\cf10 facecolor\cf4 =\cf8 "white"\cf4 )\
+)\
+\
+plt.xlabel(\cf8 "Active-site distance (\'c5)"\cf4 )\
+plt.ylabel(\cf8 "Probability density"\cf4 )\
+\
+plt.legend()\
+\
+plt.tight_layout()\
+\
+plt.show()\
+}

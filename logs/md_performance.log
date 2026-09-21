@@ -1,0 +1,70 @@
+	M E G A - F L O P S   A C C O U N T I N G
+
+ NB=Group-cutoff nonbonded kernels    NxN=N-by-N cluster Verlet kernels
+ RF=Reaction-Field  VdW=Van der Waals  QSTab=quadratic-spline table
+ W3=SPC/TIP3p  W4=TIP4p (single or pairs)
+ V&F=Potential and force  V=Potential only  F=Force only
+
+ Computing:                               M-Number         M-Flops  % Flops
+-----------------------------------------------------------------------------
+ Pair Search distance check          495013.993180     4455125.939     0.2
+ NxN Ewald Elec. + LJ [F]          16911044.876496  1116128961.849    51.5
+ NxN Ewald Elec. + LJ [V&F]          170857.128016    18281712.698     0.8
+ NxN Ewald Elec. [F]               13640324.434320   832059790.494    38.4
+ NxN Ewald Elec. [V&F]               137808.310800    11575898.107     0.5
+ 1,4 nonbonded interactions           12717.525435     1144577.289     0.1
+ Calc Weights                        163348.826697     5880557.761     0.3
+ Spread Q Bspline                   3484774.969536     6969549.939     0.3
+ Gather F Bspline                   3484774.969536    20908649.817     1.0
+ 3D-FFT                            17477894.955720   139823159.646     6.4
+ Solve PME                             4608.009216      294912.590     0.0
+ Shift-X                               1089.098899        6534.593     0.0
+ Bonds                                 2544.505089      150125.800     0.0
+ Angles                                8832.017664     1483778.968     0.1
+ Propers                              13735.027470     3145321.291     0.1
+ Impropers                             1026.502053      213512.427     0.0
+ Virial                                5447.308944       98051.561     0.0
+ Stop-CM                                544.603899        5446.039     0.0
+ Calc-Ekin                            10890.117798      294033.181     0.0
+ Lincs                                 2358.504717      141510.283     0.0
+ Lincs-Mat                            11850.023700       47400.095     0.0
+ Constraint-V                         54320.608641      434564.869     0.0
+ Constraint-Vir                        5196.303924      124711.294     0.0
+ Settle                               16534.533069     5340654.181     0.2
+-----------------------------------------------------------------------------
+ Total                                              2169008540.710   100.0
+-----------------------------------------------------------------------------
+
+
+     R E A L   C Y C L E   A N D   T I M E   A C C O U N T I N G
+
+On 1 MPI rank, each using 4 OpenMP threads
+
+ Computing:          Num   Num      Call    Wall time         Giga-Cycles
+                     Ranks Threads  Count      (s)         total sum    %
+-----------------------------------------------------------------------------
+ Neighbor search        1    4      10001     903.239       4023.336   2.0
+ Force                  1    4     500001   30232.774     134667.090  66.0
+ PME mesh               1    4     500001   13201.684      58804.805  28.8
+ NB X/F buffer ops.     1    4     990001     574.012       2556.845   1.3
+ Write traj.            1    4        151       6.542         29.140   0.0
+ Update                 1    4     500001     317.492       1414.220   0.7
+ Constraints            1    4     500001     464.191       2067.663   1.0
+ Rest                                         102.581        456.932   0.2
+-----------------------------------------------------------------------------
+ Total                                      45802.515     204020.032 100.0
+-----------------------------------------------------------------------------
+ Breakdown of PME mesh computation
+-----------------------------------------------------------------------------
+ PME spread             1    4     500001    3400.771      15148.196   7.4
+ PME gather             1    4     500001    4822.940      21483.019  10.5
+ PME 3D-FFT             1    4    1000002    4658.867      20752.182  10.2
+ PME solve Elec         1    4     500001     314.619       1401.422   0.7
+-----------------------------------------------------------------------------
+
+               Core t (s)   Wall t (s)        (%)
+       Time:   183210.029    45802.515      400.0
+                         12h43:22
+                 (ns/day)    (hour/ns)
+Performance:        1.886       12.723
+Finished mdrun on rank 0 Wed Jun  3 02:16:51 2026
