@@ -37,8 +37,6 @@ in `scripts/`.
 
 ### Zn²⁺–Peptide Distance
 
-![Zn-peptide distance vs time and distribution](results/zn_peptide_distance.png)
-
 Docking predicted a shorter Zn–ligand distance for Ang II (2.3 Å) than
 Ang I (4.1 Å). MD-derived minimum Zn–peptide distances over the 1 ns
 trajectory:
@@ -57,7 +55,6 @@ shifted toward shorter values compared with Ang I.
 
 ### ACE2–Peptide Contact Number
 
-![ACE2-ligand contact over time and distribution](results/ace2_ligand_contact.png)
 
 | Peptide | Mean contacts | Occupancy |
 |---|---|---|
